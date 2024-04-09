@@ -19,7 +19,7 @@ getWeather(50.0614, 19.9366, Intl.DateTimeFormat().resolvedOptions().timeZone).t
 function renderWeather({ current, daily, hourly}){
     renderCurrentWeather(current);
     renderDailyWeather(daily);
-    // renderHourlyWeather(hourly);
+    renderHourlyWeather(hourly);
     document.body.classList.remove("blurred")
 }
 
@@ -51,7 +51,7 @@ const dayCardTemplate = document.getElementById("day-card-template");
 function renderDailyWeather(daily){
     dailySection.innerHTML = "";
     daily.forEach(day => {
-        const element = dayCardTemplate.content.cloneNode(true); // Corrected cloning method
+        const element = dayCardTemplate.content.cloneNode(true);
         setValue("temp", day.maxTemp, {parent: element});
         setValue("date", DAY_FORMATTER.format(day.timestamp), {parent: element});
         element.querySelector("[data-icon]").src = getIconUrl(day.iconCode);
@@ -59,4 +59,23 @@ function renderDailyWeather(daily){
     })
 }
 
+
+const HOUR_FORMATTER = new Intl.DateTimeFormat(undefined, {hour: "numeric"});
+const hourlySection = document.querySelector("[data-hour-section]");
+const hourRowTemplate = document.getElementById("hour-row-template");
+
+function renderHourlyWeather(hourly){
+    hourlySection.innerHTML = "";
+    hourly.forEach(hour => {
+        const element = hourRowTemplate.content.cloneNode(true);
+        setValue("temp", hour.temp, {parent: element});
+        setValue("fl-temp", hour.feelsLike, {parent: element});
+        setValue("wind", hour.feelsLike, {parent: element});
+        setValue("precip", hour.feelsLike, {parent: element});
+        setValue("day", DAY_FORMATTER.format(hour.timestamp), {parent: element});
+        setValue("time", HOUR_FORMATTER.format(hour.timestamp), {parent: element});
+        element.querySelector("[data-icon]").src = getIconUrl(hour.iconCode);
+        hourlySection.append(element);
+    })
+}
 
