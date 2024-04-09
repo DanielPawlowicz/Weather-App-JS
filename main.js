@@ -7,10 +7,20 @@ getWeather(50.0614, 19.9366, Intl.DateTimeFormat().resolvedOptions().timeZone).t
     alert("error getting weather");
 });
 
+// getWeather(50.0614, 19.9366, Intl.DateTimeFormat().resolvedOptions().timeZone).then(data => {
+//     console.log(data);
+// });
+
+// getWeather(50.0614, 19.9366, Intl.DateTimeFormat().resolvedOptions().timeZone).then(res => {
+//     console.log(res.data);
+// });
+
+
 function renderWeather({ current, daily, hourly}){
     renderCurrentWeather(current);
-//     renderDailyWeather(daily);
-//     renderHourlyWeather(hourly);
+    renderDailyWeather(daily);
+    // renderHourlyWeather(hourly);
+    document.body.classList.remove("blurred")
 }
 
 function setValue(selector, value, {parent = document} = {}) {
@@ -33,10 +43,20 @@ function renderCurrentWeather(current) {
     setValue("current-precip", current.precip);
 }
 
-// getWeather(50.0614, 19.9366, Intl.DateTimeFormat().resolvedOptions().timeZone).then(data => {
-//     console.log(data);
-// });
 
-// getWeather(50.0614, 19.9366, Intl.DateTimeFormat().resolvedOptions().timeZone).then(res => {
-//     console.log(res.data);
-// });
+const DAY_FORMATTER = new Intl.DateTimeFormat(undefined, {weekday: "long"});
+const dailySection = document.querySelector("[data-day-section]");
+const dayCardTemplate = document.getElementById("day-card-template");
+
+function renderDailyWeather(daily){
+    dailySection.innerHTML = "";
+    daily.forEach(day => {
+        const element = dayCardTemplate.content.cloneNode(true); // Corrected cloning method
+        setValue("temp", day.maxTemp, {parent: element});
+        setValue("date", DAY_FORMATTER.format(day.timestamp), {parent: element});
+        element.querySelector("[data-icon]").src = getIconUrl(day.iconCode);
+        dailySection.append(element);
+    })
+}
+
+
